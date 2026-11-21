@@ -15,14 +15,15 @@ def build_dataset(n=12000, seed=42):
     international = rng.binomial(1, 0.12, size=n)
     frequency = rng.poisson(lam=2.2, size=n).clip(0, 20)
     merchant_risk = rng.beta(2, 5, size=n)
-    # Synthetic target rule with noise: suitable only for a learning demo.
+    # Synthetic target rule with stronger, learnable patterns and random noise.
+    # This is deliberately artificial and is not representative of banking data.
     logit = (
-        -5.0 + 0.0012 * amount
-        + 0.65 * (hour <= 5)
-        + 0.0035 * distance
-        + 1.0 * international
-        + 0.20 * frequency
-        + 2.4 * merchant_risk
+        -5.0 + 0.0025 * amount
+        + 1.5 * (hour <= 5)
+        + 0.006 * distance
+        + 1.8 * international
+        + 0.30 * frequency
+        + 4.0 * merchant_risk
     )
     probability = 1 / (1 + np.exp(-logit))
     labels = rng.binomial(1, probability)
@@ -45,8 +46,9 @@ def main():
     model.fit(X_train, y_train)
     probabilities = model.predict_proba(X_test)[:, 1]
     predictions = (probabilities >= 0.5).astype(int)
+    print("Synthetic test-set classification report:")
     print(classification_report(y_test, predictions, zero_division=0))
-    print("ROC-AUC:", round(roc_auc_score(y_test, probabilities), 4))
+    print("Synthetic test-set ROC-AUC:", round(roc_auc_score(y_test, probabilities), 4))
     MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
     joblib.dump(model, MODEL_PATH)
     print(f"Saved model to {MODEL_PATH}")
