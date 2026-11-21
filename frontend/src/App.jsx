@@ -8,6 +8,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [displayScore, setDisplayScore] = useState(0);
+  const [history, setHistory] = useState([]);
 
   useEffect(() => {
     if (!result) { setDisplayScore(0); return; }
@@ -36,10 +37,16 @@ export default function App() {
       const body = await response.json();
       if (!response.ok) throw new Error(body.detail || ('API error (' + response.status + ')'));
       setResult(body);
+      setHistory(items => [{ id: Date.now(), amount: form.amount, risk: body.risk_level, probability: body.fraud_probability, time: new Date().toLocaleTimeString() }, ...items].slice(0, 8));
     } catch (err) {
       setError(err.message + '. Check the API URL and confirm that the backend is running.');
     } finally { setLoading(false); }
   }
+
+  const highCount = history.filter(item => item.risk.toLowerCase() === 'high').length;
+  const mediumCount = history.filter(item => item.risk.toLowerCase() === 'medium').length;
+  const lowCount = history.filter(item => item.risk.toLowerCase() === 'low').length;
+  const total = history.length || 1;
 
   return <main className="shell">
     <div className="ambient ambient-one" aria-hidden="true" /><div className="ambient ambient-two" aria-hidden="true" />
@@ -68,6 +75,27 @@ export default function App() {
       <p className="muted">Estimated fraud probability · synthetic demo model</p>
       <h4>Recommended next step</h4><p>{result.recommended_action}</p><h4>Signals detected</h4>
       <ul>{result.signals.map((signal,index)=><li className="signal-enter" style={{animationDelay: (index*90) + 'ms'}} key={signal}>{signal}</li>)}</ul>
+    </section>}
+
+    {history.length > 0 && <section className="analytics panel result-enter">
+      <div className="panel-heading"><div><p className="eyebrow">SESSION OVERVIEW</p><h3>Analysis activity</h3></div><span className="step">LIVE SESSION</span></div>
+      <div className="stat-grid">
+        <div className="stat-card"><span>Analysed</span><strong>{history.length}</strong></div>
+        <div className="stat-card"><span>High risk</span><strong className="stat-high">{highCount}</strong></div>
+        <div className="stat-card"><span>Medium risk</span><strong className="stat-medium">{mediumCount}</strong></div>
+        <div className="stat-card"><span>Low risk</span><strong className="stat-low">{lowCount}</strong></div>
+      </div>
+      <div className="distribution"><div className="distribution-label"><span>Risk distribution</span><span>{history.length} checks</span></div>
+        <div className="distribution-bar"><i className="bar-high" style={{width: (highCount/total*100)+'%'}}/><i className="bar-medium" style={{width: (mediumCount/total*100)+'%'}}/><i className="bar-low" style={{width: (lowCount/total*100)+'%'}}/></div>
+        <div className="legend"><span><i className="dot-high"/> High</span><span><i className="dot-medium"/> Medium</span><span><i className="dot-low"/> Low</span></div>
+      </div>
+      <h4>Recent transactions</h4>
+      <div className="history-list">{history.map(item => <div className="history-row" key={item.id}>
+        <div><strong>₹{Number(item.amount).toLocaleString('en-IN')}</strong><small>{item.time}</small></div>
+        <span className={'risk '+item.risk.toLowerCase()}>{item.risk}</span>
+        <strong className="history-score">{(item.probability*100).toFixed(1)}%</strong>
+      </div>)}</div>
+      <p className="muted small-note">Session-only history: this list resets when the page is refreshed. No real customer transaction data is stored.</p>
     </section>}
     <footer>PORTFOLIO PROJECT · EDUCATIONAL USE ONLY · NOT FOR REAL FINANCIAL DECISIONS</footer>
   </main>;
