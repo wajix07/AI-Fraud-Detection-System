@@ -93,7 +93,7 @@ export default function App() {
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
     }[char]));
     const rows = history.map(item => `<tr><td>${safe(item.id)}</td><td>₹${Number(item.amount).toLocaleString('en-IN')}</td><td>${safe(item.risk)}</td><td>${(Number(item.probability) * 100).toFixed(1)}%</td><td>${safe(item.time)}</td></tr>`).join('');
-    const report = window.open('', '_blank', 'noopener,noreferrer');
+    const report = window.open('', '_blank');
     if (!report) {
       setError('Please allow pop-ups for this site to create your PDF report.');
       return;
