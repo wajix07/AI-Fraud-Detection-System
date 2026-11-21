@@ -86,6 +86,44 @@ export default function App() {
   }
 
 
+
+  function exportPdfReport() {
+    if (!history.length) return;
+    const safe = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[char]));
+    const rows = history.map(item => `<tr><td>${safe(item.id)}</td><td>₹${Number(item.amount).toLocaleString('en-IN')}</td><td>${safe(item.risk)}</td><td>${(Number(item.probability) * 100).toFixed(1)}%</td><td>${safe(item.time)}</td></tr>`).join('');
+    const report = window.open('', '_blank', 'noopener,noreferrer');
+    if (!report) {
+      setError('Please allow pop-ups for this site to create your PDF report.');
+      return;
+    }
+    report.document.write(`<!doctype html><html><head><title>FraudShield AI Report</title><style>
+      *{box-sizing:border-box}body{font-family:Arial,sans-serif;color:#18232c;margin:36px;line-height:1.5}
+      h1{margin:0;color:#203d2b} .sub{color:#657580;margin:6px 0 24px}
+      .summary{display:flex;gap:12px;margin:20px 0}.card{border:1px solid #d8e0e4;border-radius:8px;padding:14px;flex:1}
+      .card span{display:block;color:#657580;font-size:12px}.card strong{font-size:24px}
+      .high{color:#b63e3e}.medium{color:#986b17}.low{color:#38733c}
+      h2{font-size:17px;margin-top:28px}table{width:100%;border-collapse:collapse;font-size:12px}
+      th,td{text-align:left;padding:10px 8px;border-bottom:1px solid #e1e7ea}th{background:#f1f5f3}
+      .note{margin-top:28px;padding:12px;background:#f5f7f6;color:#56656d;font-size:11px}
+      @media print{body{margin:18mm}.summary{break-inside:avoid}tr{break-inside:avoid}}
+    </style></head><body>
+      <h1>FraudShield AI</h1><p class="sub">Transaction risk analysis report · Generated ${safe(new Date().toLocaleString())}</p>
+      <div class="summary">
+        <div class="card"><span>Total analysed</span><strong>${history.length}</strong></div>
+        <div class="card"><span>High risk</span><strong class="high">${highCount}</strong></div>
+        <div class="card"><span>Medium risk</span><strong class="medium">${mediumCount}</strong></div>
+        <div class="card"><span>Low risk</span><strong class="low">${lowCount}</strong></div>
+      </div>
+      <h2>Recent transaction analyses</h2>
+      <table><thead><tr><th>Transaction ID</th><th>Amount</th><th>Risk</th><th>Fraud probability</th><th>Time</th></tr></thead><tbody>${rows}</tbody></table>
+      <p class="note"><strong>Important:</strong> This report is generated from a synthetic educational demo model. It is not a financial audit, a confirmed fraud finding, or advice for real financial decisions. History is stored only in this browser.</p>
+      <script>window.onload=()=>window.print()<\/script>
+    </body></html>`);
+    report.document.close();
+  }
+
   return <main className="shell">
     <div className="ambient ambient-one" aria-hidden="true" /><div className="ambient ambient-two" aria-hidden="true" />
     <header className="topbar"><div className="brand-mark">F</div><div><p className="eyebrow">INTELLIGENT TRANSACTION MONITORING</p><h1>FraudShield <span>AI</span></h1></div></header>
@@ -116,7 +154,7 @@ export default function App() {
     </section>}
 
     {history.length > 0 && <section className="analytics panel result-enter">
-      <div className="panel-heading"><div><p className="eyebrow">SAVED OVERVIEW</p><h3>Analysis activity</h3></div><div className="history-actions"><button type="button" className="export-history" onClick={exportHistory}>↓ Export CSV</button><button type="button" className="clear-history" onClick={() => setHistory([])}>Clear history</button></div></div>
+      <div className="panel-heading"><div><p className="eyebrow">SAVED OVERVIEW</p><h3>Analysis activity</h3></div><div className="history-actions"><button type="button" className="export-history" onClick={exportHistory}>↓ Export CSV</button><button type="button" className="export-pdf" onClick={exportPdfReport}>▤ Save PDF</button><button type="button" className="clear-history" onClick={() => setHistory([])}>Clear history</button></div></div>
       <div className="stat-grid">
         <div className="stat-card"><span>Analysed</span><strong>{history.length}</strong></div>
         <div className="stat-card"><span>High risk</span><strong className="stat-high">{highCount}</strong></div>
