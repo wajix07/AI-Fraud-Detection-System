@@ -8,7 +8,22 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [displayScore, setDisplayScore] = useState(0);
-  const [history, setHistory] = useState([]);
+  const [history, setHistory] = useState(() => {
+    try {
+      const saved = localStorage.getItem('fraudshield-history');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('fraudshield-history', JSON.stringify(history));
+    } catch (storageError) {
+      console.warn('Could not save analysis history in this browser.', storageError);
+    }
+  }, [history]);
 
   useEffect(() => {
     if (!result) { setDisplayScore(0); return; }
@@ -78,7 +93,7 @@ export default function App() {
     </section>}
 
     {history.length > 0 && <section className="analytics panel result-enter">
-      <div className="panel-heading"><div><p className="eyebrow">SESSION OVERVIEW</p><h3>Analysis activity</h3></div><span className="step">LIVE SESSION</span></div>
+      <div className="panel-heading"><div><p className="eyebrow">SAVED OVERVIEW</p><h3>Analysis activity</h3></div><button type="button" className="clear-history" onClick={() => setHistory([])}>Clear history</button></div>
       <div className="stat-grid">
         <div className="stat-card"><span>Analysed</span><strong>{history.length}</strong></div>
         <div className="stat-card"><span>High risk</span><strong className="stat-high">{highCount}</strong></div>
@@ -95,7 +110,7 @@ export default function App() {
         <span className={'risk '+item.risk.toLowerCase()}>{item.risk}</span>
         <strong className="history-score">{(item.probability*100).toFixed(1)}%</strong>
       </div>)}</div>
-      <p className="muted small-note">Session-only history: this list resets when the page is refreshed. No real customer transaction data is stored.</p>
+      <p className="muted small-note">Saved in this browser on this device, including after refresh. Clearing browser data or using another browser/device will not carry this history over. Demo data only — do not enter real customer or payment information.</p>
     </section>}
     <footer>PORTFOLIO PROJECT · EDUCATIONAL USE ONLY · NOT FOR REAL FINANCIAL DECISIONS</footer>
   </main>;
