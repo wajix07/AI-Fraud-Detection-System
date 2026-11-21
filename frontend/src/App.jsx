@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000').replace(/\/$/, '');
+
 const initial = {
   amount: 850, hour: 2, distance_from_home_km: 420,
   is_international: true, transactions_last_24h: 8, merchant_risk: 0.8
@@ -19,15 +21,15 @@ export default function App() {
     event.preventDefault();
     setLoading(true); setError(''); setResult(null);
     try {
-      const response = await fetch('http://127.0.0.1:8000/predict', {
+      const response = await fetch(`${API_BASE_URL}/predict`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
       });
       const body = await response.json();
-      if (!response.ok) throw new Error(body.detail || 'Prediction failed');
+      if (!response.ok) throw new Error(body.detail || `API error (${response.status})`);
       setResult(body);
     } catch (err) {
-      setError(`${err.message}. Check that the API is running and the model is trained.`);
+      setError(`${err.message}. Check the API URL and confirm that the backend is running.`);
     } finally { setLoading(false); }
   }
 
