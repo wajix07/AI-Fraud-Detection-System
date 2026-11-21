@@ -62,6 +62,29 @@ export default function App() {
   const mediumCount = history.filter(item => item.risk.toLowerCase() === 'medium').length;
   const lowCount = history.filter(item => item.risk.toLowerCase() === 'low').length;
   const total = history.length || 1;
+  function exportHistory() {
+    if (!history.length) return;
+    const columns = ['Transaction ID', 'Amount (INR)', 'Risk Level', 'Fraud Probability (%)', 'Time'];
+    const rows = history.map(item => [
+      item.id,
+      item.amount,
+      item.risk,
+      (Number(item.probability) * 100).toFixed(2),
+      item.time
+    ]);
+    const csvCell = value => '"' + String(value ?? '').replace(/"/g, '""') + '"';
+    const csv = [columns, ...rows].map(row => row.map(csvCell).join(',')).join('\r\n');
+    const blob = new Blob(['\\uFEFF', csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'fraudshield-analysis-history.csv';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
 
   return <main className="shell">
     <div className="ambient ambient-one" aria-hidden="true" /><div className="ambient ambient-two" aria-hidden="true" />
@@ -93,7 +116,7 @@ export default function App() {
     </section>}
 
     {history.length > 0 && <section className="analytics panel result-enter">
-      <div className="panel-heading"><div><p className="eyebrow">SAVED OVERVIEW</p><h3>Analysis activity</h3></div><button type="button" className="clear-history" onClick={() => setHistory([])}>Clear history</button></div>
+      <div className="panel-heading"><div><p className="eyebrow">SAVED OVERVIEW</p><h3>Analysis activity</h3></div><div className="history-actions"><button type="button" className="export-history" onClick={exportHistory}>↓ Export CSV</button><button type="button" className="clear-history" onClick={() => setHistory([])}>Clear history</button></div></div>
       <div className="stat-grid">
         <div className="stat-card"><span>Analysed</span><strong>{history.length}</strong></div>
         <div className="stat-card"><span>High risk</span><strong className="stat-high">{highCount}</strong></div>
