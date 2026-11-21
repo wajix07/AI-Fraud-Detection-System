@@ -21,3 +21,8 @@ h4{margin:22px 0 8px}.risk{font:11px 'DM Mono';padding:8px 10px;border-radius:20
 
 .clear-history{background:transparent;color:#b9f36b;border:1px solid #496052;padding:9px 12px;font-size:11px;border-radius:8px}.clear-history:hover:not(:disabled){background:#b9f36b14;box-shadow:none;transform:translateY(-1px)}
 @media(max-width:420px){.analytics .panel-heading{align-items:flex-start;gap:12px}.clear-history{white-space:nowrap;padding:8px 10px}}
+
+.history-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.export-history{background:#b9f36b18;color:#b9f36b;border:1px solid #496052;padding:9px 12px;font-size:11px;border-radius:8px}
+.export-history:hover:not(:disabled){background:#b9f36b28;box-shadow:none;transform:translateY(-1px)}
+@media(max-width:520px){.analytics .panel-heading{align-items:flex-start;gap:12px}.history-actions{justify-content:flex-end}.history-actions button{white-space:nowrap;padding:8px 10px}}
