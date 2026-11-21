@@ -1,3 +1,4 @@
+import pandas as pd
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from app.schemas import Transaction, Prediction
@@ -28,7 +29,8 @@ def predict(transaction: Transaction):
     except FileNotFoundError as exc:
         raise HTTPException(status_code=503, detail=str(exc))
     data = transaction.model_dump()
-    row = [[int(data[k]) if k == "is_international" else data[k] for k in FEATURES]]
+    data["is_international"] = int(data["is_international"])
+    row = pd.DataFrame([[data[k] for k in FEATURES]], columns=FEATURES)
     probability = float(model.predict_proba(row)[0][1])
     risk = "HIGH" if probability >= 0.70 else "MEDIUM" if probability >= 0.35 else "LOW"
     action = "Flag for manual review" if risk == "HIGH" else (
