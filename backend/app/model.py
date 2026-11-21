@@ -1,6 +1,6 @@
+from functools import lru_cache
 from pathlib import Path
 import joblib
-import numpy as np
 
 FEATURES = [
     "amount", "hour", "distance_from_home_km",
@@ -8,7 +8,9 @@ FEATURES = [
 ]
 MODEL_PATH = Path(__file__).resolve().parents[1] / "artifacts" / "fraud_model.joblib"
 
+@lru_cache(maxsize=1)
 def load_model():
+    """Load the trained model once per API process."""
     if not MODEL_PATH.exists():
         raise FileNotFoundError("Model not found. Run `python train.py` from backend/.")
     return joblib.load(MODEL_PATH)
