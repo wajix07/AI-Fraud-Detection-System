@@ -104,8 +104,7 @@ Example response shape (the numeric result can vary with the trained model):
 }
 ```
 
-Try the live endpoint using the interactive [Swagger UI](/docs) on the deployed API, or open:
-https://ai-fraud-detection-api-0pm4.onrender.com/docs
+Try the live endpoint using the interactive [Swagger UI](https://ai-fraud-detection-api-0pm4.onrender.com/docs).
 
 ## Run locally
 
@@ -208,8 +207,8 @@ A production-grade system would require appropriately licensed and anonymized da
 - Add CI checks for backend tests and frontend builds.
 - Add screenshot-based product documentation.
 
-## Author
+## Repository
 
-**Wajid** · [GitHub profile](https://github.com/wajix07)
+[GitHub repository](https://github.com/wajix07/AI-Fraud-Detection-System) · [GitHub profile](https://github.com/wajix07)
 
 If you find this project useful, consider giving the repository a star.
