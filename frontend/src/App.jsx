@@ -195,7 +195,7 @@ export default function App() {
   }
 
   return <main className="shell">
-    <div className="ambient ambient-one" aria-hidden="true" /><div className="ambient ambient-two" aria-hidden="true" />
+    <div className="ambient ambient-one" aria-hidden="true" /><div className="ambient ambient-two" aria-hidden="true" /><div className="floating-icons" aria-hidden="true"><span className="float-icon float-shield"><Icon name="shield" size={23}/></span><span className="float-icon float-activity"><Icon name="activity" size={21}/></span><span className="float-icon float-chart"><Icon name="chart" size={22}/></span><span className="float-icon float-search"><Icon name="search" size={20}/></span></div>
     <header className="topbar"><div className="brand-lockup"><div className="brand-mark">W</div><div><p className="eyebrow">AI-POWERED FRAUD DETECTION</p><h1>WFraudN<span>@X</span></h1></div></div>{!isInstalled && (installPrompt || isIOS) && <button type="button" className="install-app" onClick={installApp}>Install App ↓</button>}</header>
     {showInstallHelp && <div className="install-help" role="status">To install on iPhone: open this page in Safari, tap the Share icon, then choose <strong>Add to Home Screen</strong>.</div>}
     <section className="intro reveal">
