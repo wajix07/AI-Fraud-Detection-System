@@ -1,0 +1,20 @@
+{
+  "id": "/",
+  "name": "FraudShield AI",
+  "short_name": "FraudShield",
+  "description": "An educational AI-powered transaction risk analysis demo.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b1118",
+  "theme_color": "#0b1118",
+  "icons": [
+    {
+      "src": "/icons/fraudshield.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
