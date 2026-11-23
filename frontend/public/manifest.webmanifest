@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "FraudShield AI",
-  "short_name": "FraudShield",
-  "description": "An educational AI-powered transaction risk analysis demo.",
+  "name": "WFraudN@X",
+  "short_name": "WFraudN@X",
+  "description": "WFraudN@X — an educational AI-powered fraud detection demo.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
