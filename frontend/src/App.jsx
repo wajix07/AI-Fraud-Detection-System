@@ -30,6 +30,14 @@ export default function App() {
   const [showInstallHelp, setShowInstallHelp] = useState(false);
   const [error, setError] = useState('');
   const [apiStatus, setApiStatus] = useState('checking');
+  useEffect(() => {
+    let active = true;
+    fetch(API_BASE_URL + '/health')
+      .then(response => { if (!response.ok) throw new Error('API unavailable'); return response.json(); })
+      .then(() => { if (active) setApiStatus('online'); })
+      .catch(() => { if (active) setApiStatus('offline'); });
+    return () => { active = false; };
+  }, []);
   const [displayScore, setDisplayScore] = useState(0);
   const [history, setHistory] = useState(() => {
     try {
@@ -256,5 +264,4 @@ export default function App() {
       </div>
     </div>
   </main>;
-}
 }
