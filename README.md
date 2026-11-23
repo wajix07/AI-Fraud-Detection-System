@@ -1,9 +1,9 @@
-# FraudShield AI — AI-Powered Fraud Detection
+# WFraudN@X — AI-Powered Fraud Detection
 
 A full-stack portfolio project that estimates transaction fraud risk using a machine-learning classifier. It combines a React dashboard, a FastAPI backend, and a scikit-learn Random Forest model.
 
 <p align="center">
-  <a href="https://fraudshield-ai-dashboard.onrender.com"><strong>Open Live Dashboard</strong></a>
+  <a href="https://fraudshield-ai-dashboard.onrender.com"><strong>Open WFraudN@X App</strong></a>
   ·
   <a href="https://ai-fraud-detection-api-0pm4.onrender.com/docs"><strong>Explore API Docs</strong></a>
   ·
@@ -208,9 +208,9 @@ A production-grade system would require appropriately licensed and anonymized da
 - Add screenshot-based product documentation.
 
 
-## Install FraudShield AI
+## Install WFraudN@X
 
-FraudShield AI is configured as a Progressive Web App (PWA), so it can be installed from the deployed website without publishing through an app store or paying a store registration fee.
+WFraudN@X is configured as a Progressive Web App (PWA), so it can be installed from the deployed website without publishing through an app store or paying a store registration fee.
 
 1. Open the live dashboard in a supported browser: https://fraudshield-ai-dashboard.onrender.com
 2. On Android, use Chrome and choose **Install app** when the browser or dashboard offers it.
