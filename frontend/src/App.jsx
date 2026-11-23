@@ -139,7 +139,7 @@ export default function App() {
       setError('Please allow pop-ups for this site to create your PDF report.');
       return;
     }
-    report.document.write(`<!doctype html><html><head><title>FraudShield AI Report</title><style>
+    report.document.write(`<!doctype html><html><head><title>WFraudN@X Report</title><style>
       *{box-sizing:border-box}body{font-family:Arial,sans-serif;color:#18232c;margin:36px;line-height:1.5}
       h1{margin:0;color:#203d2b} .sub{color:#657580;margin:6px 0 24px}
       .summary{display:flex;gap:12px;margin:20px 0}.card{border:1px solid #d8e0e4;border-radius:8px;padding:14px;flex:1}
@@ -150,7 +150,7 @@ export default function App() {
       .note{margin-top:28px;padding:12px;background:#f5f7f6;color:#56656d;font-size:11px}
       @media print{body{margin:18mm}.summary{break-inside:avoid}tr{break-inside:avoid}}
     </style></head><body>
-      <h1>FraudShield AI</h1><p class="sub">Transaction risk analysis report · Generated ${safe(new Date().toLocaleString())}</p>
+      <h1>WFraudN@X</h1><p class="sub">Transaction risk analysis report · Generated ${safe(new Date().toLocaleString())}</p>
       <div class="summary">
         <div class="card"><span>Total analysed</span><strong>${history.length}</strong></div>
         <div class="card"><span>High risk</span><strong class="high">${highCount}</strong></div>
@@ -167,7 +167,7 @@ export default function App() {
 
   return <main className="shell">
     <div className="ambient ambient-one" aria-hidden="true" /><div className="ambient ambient-two" aria-hidden="true" />
-    <header className="topbar"><div className="brand-lockup"><div className="brand-mark">F</div><div><p className="eyebrow">INTELLIGENT TRANSACTION MONITORING</p><h1>FraudShield <span>AI</span></h1></div></div>{!isInstalled && (installPrompt || isIOS) && <button type="button" className="install-app" onClick={installApp}>Install App ↓</button>}</header>
+    <header className="topbar"><div className="brand-lockup"><div className="brand-mark">W</div><div><p className="eyebrow">AI-POWERED FRAUD DETECTION</p><h1>WFraudN<span>@X</span></h1></div></div>{!isInstalled && (installPrompt || isIOS) && <button type="button" className="install-app" onClick={installApp}>Install App ↓</button>}</header>
     {showInstallHelp && <div className="install-help" role="status">To install on iPhone: open this page in Safari, tap the Share icon, then choose <strong>Add to Home Screen</strong>.</div>}
     <section className="intro reveal">
       <div><p className="eyebrow">RISK ANALYSIS WORKSPACE</p><h2>Know the risk.<br/><em>Before it escalates.</em></h2><p className="muted">Submit transaction details to estimate fraud risk using a machine-learning model.</p></div>
