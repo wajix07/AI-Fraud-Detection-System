@@ -15,13 +15,7 @@ function Icon({ name, size = 17 }) {
     rotate: <><path d="M20 7v5h-5"/><path d="M4 17v-5h5"/><path d="M5.6 9A7 7 0 0 1 18 6l2 6M4 12l2 6a7 7 0 0 0 12.4-3"/></>,
     chart: <><path d="M4 19V5M4 19h17"/><path d="m7 15 4-4 3 2 5-7"/></>,
     clock: <><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></>,
-    file: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></>,
-    wallet: <><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M16 14h2"/></>,
-    globe: <><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></>,
-    pin: <><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></>,
-    copy: <><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></>,
-    check: <><path d="m5 12 4 4L19 6"/></>,
-    alert: <><path d="M12 3 2.8 19h18.4L12 3Z"/><path d="M12 9v4M12 16h.01"/></>
+    file: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></>
   };
   return <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{paths[name] || paths.shield}</svg>;
 }
@@ -37,7 +31,6 @@ export default function App() {
   const [error, setError] = useState('');
   const [apiStatus, setApiStatus] = useState('checking');
   const [displayScore, setDisplayScore] = useState(0);
-  const [copiedResult, setCopiedResult] = useState(false);
   const [history, setHistory] = useState(() => {
     try {
       const saved = localStorage.getItem('fraudshield-history');
@@ -119,27 +112,9 @@ export default function App() {
     setResult(null);
     setError('');
   }
-  async function copyResult() {
-    if (!result) return;
-    const summary = [
-      'WFraudN@X — Transaction Risk Assessment',
-      'Risk level: ' + result.risk_level,
-      'Estimated fraud probability: ' + (Number(result.fraud_probability) * 100).toFixed(1) + '%',
-      'Recommended action: ' + result.recommended_action,
-      'Signals detected: ' + (result.signals || []).join('; '),
-      'Educational demo model — not a confirmed fraud finding.'
-    ].join('\n');
-    try {
-      await navigator.clipboard.writeText(summary);
-      setCopiedResult(true);
-    } catch {
-      setError('Could not copy automatically. Please allow clipboard access in your browser.');
-    }
-  }
-
   async function submit(event) {
     event.preventDefault();
-    setLoading(true); setError(''); setResult(null); setCopiedResult(false);
+    setLoading(true); setError(''); setResult(null);
     try {
       const response = await fetch(API_BASE_URL + '/predict', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form)
@@ -234,18 +209,18 @@ export default function App() {
         <div className="sample-buttons">{samples.map(sample => <button type="button" className="sample-button" key={sample.label} onClick={() => loadSample(sample)}><Icon name={sample.icon} size={14}/>{sample.label}</button>)}</div>
       </div>
       <form onSubmit={submit}>
-        <label><span className="field-label"><Icon name="wallet" size={14}/> Transaction amount (₹)</span><input type="number" min="0" value={form.amount} onChange={e=>update('amount', Number(e.target.value))}/></label>
-        <label><span className="field-label"><Icon name="clock" size={14}/> Transaction hour (0–23)</span><input type="number" min="0" max="23" value={form.hour} onChange={e=>update('hour', Number(e.target.value))}/></label>
-        <label><span className="field-label"><Icon name="pin" size={14}/> Distance from home (km)</span><input type="number" min="0" value={form.distance_from_home_km} onChange={e=>update('distance_from_home_km', Number(e.target.value))}/></label>
-        <label><span className="field-label"><Icon name="activity" size={14}/> Transactions in last 24 hours</span><input type="number" min="0" value={form.transactions_last_24h} onChange={e=>update('transactions_last_24h', Number(e.target.value))}/></label>
-        <label className="wide"><span className="field-label"><Icon name="shield" size={14}/> Merchant risk score</span> <strong>{Number(form.merchant_risk).toFixed(2)}</strong><input type="range" min="0" max="1" step="0.05" value={form.merchant_risk} onChange={e=>update('merchant_risk', Number(e.target.value))}/></label>
-        <label className="toggle"><input type="checkbox" checked={form.is_international} onChange={e=>update('is_international', e.target.checked)}/> <span className="field-label"><Icon name="globe" size={14}/> International transaction</span></label>
+        <label>Transaction amount (₹)<input type="number" min="0" value={form.amount} onChange={e=>update('amount', Number(e.target.value))}/></label>
+        <label>Transaction hour (0–23)<input type="number" min="0" max="23" value={form.hour} onChange={e=>update('hour', Number(e.target.value))}/></label>
+        <label>Distance from home (km)<input type="number" min="0" value={form.distance_from_home_km} onChange={e=>update('distance_from_home_km', Number(e.target.value))}/></label>
+        <label>Transactions in last 24 hours<input type="number" min="0" value={form.transactions_last_24h} onChange={e=>update('transactions_last_24h', Number(e.target.value))}/></label>
+        <label className="wide">Merchant risk score <strong>{Number(form.merchant_risk).toFixed(2)}</strong><input type="range" min="0" max="1" step="0.05" value={form.merchant_risk} onChange={e=>update('merchant_risk', Number(e.target.value))}/></label>
+        <label className="toggle"><input type="checkbox" checked={form.is_international} onChange={e=>update('is_international', e.target.checked)}/> International transaction</label>
         <div className="form-actions"><button disabled={loading || apiStatus === 'offline'} className={loading ? 'analyzing' : ''}>{loading && <span className="spinner" aria-hidden="true"/>}{loading ? 'Analysing transaction…' : <><Icon name="search" size={16}/> Run fraud analysis</>}</button><button type="button" className="reset-form" onClick={resetForm} disabled={loading}><Icon name="rotate" size={15}/> Reset inputs</button></div>
       </form>
       {error && <p className="error" role="alert">{error}</p>}
     </section>
     {result && <section className="result panel result-enter" aria-live="polite">
-      <div className="panel-heading"><div><p className="eyebrow"><Icon name="activity" size={13}/> MODEL OUTPUT</p><h3>Risk assessment</h3></div><div className="result-actions"><span className={'risk ' + result.risk_level.toLowerCase()}>{result.risk_level} RISK</span><button type="button" className="copy-result" onClick={copyResult}><Icon name={copiedResult ? 'check' : 'copy'} size={14}/>{copiedResult ? 'Copied' : 'Copy summary'}</button></div></div>
+      <div className="panel-heading"><div><p className="eyebrow"><Icon name="activity" size={13}/> MODEL OUTPUT</p><h3>Risk assessment</h3></div><span className={'risk ' + result.risk_level.toLowerCase()}>{result.risk_level} RISK</span></div>
       <div className="score">{displayScore.toFixed(1)}<small>%</small></div>
       <div className="meter"><span className={result.risk_level.toLowerCase()} style={{width: displayScore + '%'}}/></div>
       <p className="muted">Estimated fraud probability · synthetic demo model</p>
