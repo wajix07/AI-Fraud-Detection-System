@@ -36,12 +36,3 @@ h4{margin:22px 0 8px}.risk{font:11px 'DM Mono';padding:8px 10px;border-radius:20
 .install-help{margin:16px 0 0;padding:14px 16px;border:1px solid #496052;border-radius:10px;background:#14212b;color:#c7d4dc;font-size:13px;line-height:1.6}
 .install-help strong{color:#b9f36b}
 @media(max-width:420px){.brand-lockup{gap:10px}.install-app{padding:9px 10px;font-size:11px}.topbar .eyebrow{font-size:9px;letter-spacing:1px}}
-
-
-/* Additional dashboard icon and result-copy controls */
-.field-label{display:inline-flex;align-items:center;gap:8px;color:#c3d0d8}
-.field-label svg{color:#b9f36b;flex:0 0 auto}
-.result-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-.copy-result{background:#b9f36b18;color:#b9f36b;border:1px solid #496052;padding:8px 11px;font-size:11px;border-radius:8px}
-.copy-result:hover:not(:disabled){background:#b9f36b28;box-shadow:none;transform:translateY(-1px)}
-@media(max-width:520px){.result .panel-heading{align-items:flex-start;gap:12px}.result-actions{gap:7px}.copy-result{white-space:nowrap}}
