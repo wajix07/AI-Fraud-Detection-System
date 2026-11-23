@@ -6,6 +6,10 @@ export default function App() {
   const [form, setForm] = useState(initial);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [installPrompt, setInstallPrompt] = useState(null);
+  const [isIOS, setIsIOS] = useState(false);
+  const [isInstalled, setIsInstalled] = useState(false);
+  const [showInstallHelp, setShowInstallHelp] = useState(false);
   const [error, setError] = useState('');
   const [displayScore, setDisplayScore] = useState(0);
   const [history, setHistory] = useState(() => {
@@ -16,6 +20,43 @@ export default function App() {
       return [];
     }
   });
+
+  useEffect(() => {
+    const appleMobile = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    setIsIOS(appleMobile);
+    setIsInstalled(
+      window.matchMedia('(display-mode: standalone)').matches ||
+      navigator.standalone === true
+    );
+
+    const handleInstallPrompt = (event) => {
+      event.preventDefault();
+      setInstallPrompt(event);
+    };
+    const handleInstalled = () => {
+      setIsInstalled(true);
+      setInstallPrompt(null);
+      setShowInstallHelp(false);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleInstallPrompt);
+    window.addEventListener('appinstalled', handleInstalled);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleInstallPrompt);
+      window.removeEventListener('appinstalled', handleInstalled);
+    };
+  }, []);
+
+  async function installApp() {
+    if (!installPrompt) {
+      setShowInstallHelp(true);
+      return;
+    }
+    await installPrompt.prompt();
+    const choice = await installPrompt.userChoice;
+    if (choice.outcome === 'accepted') setInstallPrompt(null);
+  }
 
   useEffect(() => {
     try {
@@ -126,7 +167,8 @@ export default function App() {
 
   return <main className="shell">
     <div className="ambient ambient-one" aria-hidden="true" /><div className="ambient ambient-two" aria-hidden="true" />
-    <header className="topbar"><div className="brand-mark">F</div><div><p className="eyebrow">INTELLIGENT TRANSACTION MONITORING</p><h1>FraudShield <span>AI</span></h1></div></header>
+    <header className="topbar"><div className="brand-lockup"><div className="brand-mark">F</div><div><p className="eyebrow">INTELLIGENT TRANSACTION MONITORING</p><h1>FraudShield <span>AI</span></h1></div></div>{!isInstalled && (installPrompt || isIOS) && <button type="button" className="install-app" onClick={installApp}>Install App ↓</button>}</header>
+    {showInstallHelp && <div className="install-help" role="status">To install on iPhone: open this page in Safari, tap the Share icon, then choose <strong>Add to Home Screen</strong>.</div>}
     <section className="intro reveal">
       <div><p className="eyebrow">RISK ANALYSIS WORKSPACE</p><h2>Know the risk.<br/><em>Before it escalates.</em></h2><p className="muted">Submit transaction details to estimate fraud risk using a machine-learning model.</p></div>
       <div className="status"><i/> MODEL API · DEMO</div>
