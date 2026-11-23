@@ -194,60 +194,67 @@ export default function App() {
     report.document.close();
   }
 
-  return <main className="shell">
-    <div className="ambient ambient-one" aria-hidden="true" /><div className="ambient ambient-two" aria-hidden="true" /><div className="floating-icons" aria-hidden="true"><span className="float-icon float-shield"><Icon name="shield" size={23}/></span><span className="float-icon float-activity"><Icon name="activity" size={21}/></span><span className="float-icon float-chart"><Icon name="chart" size={22}/></span><span className="float-icon float-search"><Icon name="search" size={20}/></span></div>
-    <header className="topbar"><div className="brand-lockup"><div className="brand-mark">W</div><div><p className="eyebrow">AI-POWERED FRAUD DETECTION</p><h1>WFraudN<span>@X</span></h1></div></div>{!isInstalled && (installPrompt || isIOS) && <button type="button" className="install-app" onClick={installApp}>Install App ↓</button>}</header>
-    {showInstallHelp && <div className="install-help" role="status">To install on iPhone: open this page in Safari, tap the Share icon, then choose <strong>Add to Home Screen</strong>.</div>}
-    <section className="intro reveal">
-      <div><p className="eyebrow">RISK ANALYSIS WORKSPACE</p><h2>Know the risk.<br/><em>Before it escalates.</em></h2><p className="muted">Submit transaction details to estimate fraud risk using a machine-learning model.</p></div>
-      <div className={'status status-' + apiStatus}><i/> API {apiStatus === 'checking' ? 'CHECKING' : apiStatus.toUpperCase()} · DEMO</div>
-    </section>
-    <section className="panel input-panel reveal delay-one">
-      <div className="panel-heading"><div><p className="eyebrow"><Icon name="shield" size={13}/> TRANSACTION INPUT</p><h3>Analyse a transaction</h3></div><span className="step">01 / INPUT</span></div>
-      <div className="sample-toolbar">
-        <span className="sample-label">QUICK TEST SCENARIOS</span>
-        <div className="sample-buttons">{samples.map(sample => <button type="button" className="sample-button" key={sample.label} onClick={() => loadSample(sample)}><Icon name={sample.icon} size={14}/>{sample.label}</button>)}</div>
+  return <main className="dashboard-shell">
+    <div className="ambient ambient-one" aria-hidden="true" /><div className="ambient ambient-two" aria-hidden="true" />
+    <header className="dashboard-topbar">
+      <a className="brand-lockup" href="#home" aria-label="WFraudN@X home"><div className="brand-mark"><Icon name="shield" size={27}/></div><div><h1>WFraudN<span>@X</span></h1><p>AI-POWERED FRAUD DETECTION</p></div></a>
+      <nav className="top-navigation" aria-label="Main navigation"><a className="active" href="#home">⌂ <span>Dashboard</span></a><a href="#analytics"><Icon name="chart"/> <span>Analytics</span></a><a href="#history"><Icon name="clock"/> <span>History</span></a><a href="#analyzer"><Icon name="shield"/> <span>Analyzer</span></a></nav>
+      <div className="top-status"><span className={'api-indicator ' + apiStatus}></span><span>{apiStatus === 'checking' ? 'Connecting' : apiStatus === 'offline' ? 'API offline' : 'System online'}</span></div>
+    </header>
+    <div className="dashboard-layout">
+      <aside className="side-rail"><a className="rail-active" href="#home">⌂ <span>Dashboard</span></a><a href="#analytics"><Icon name="chart"/> <span>Analytics</span></a><a href="#history"><Icon name="clock"/> <span>Transaction History</span></a><a href="#analyzer"><Icon name="search"/> <span>Run Analysis</span></a><div className="rail-trust"><div className="rail-shield"><Icon name="shield" size={31}/></div><strong>Smart Security</strong><span>Safer transactions</span></div></aside>
+      <div className="dashboard-content">
+        <section className="hero-section" id="home">
+          <div className="hero-copy"><p className="eyebrow">INTELLIGENT TRANSACTION PROTECTION</p><h2>Know the Risk.<br/><em>Before it Escalates.</em></h2><p>AI-powered fraud detection for a safer, smarter tomorrow.</p><a className="hero-cta" href="#analyzer"><Icon name="search"/> Run Fraud Analysis <span>→</span></a></div>
+          <div className="hero-visual" aria-hidden="true"><div className="orbit orbit-one"></div><div className="orbit orbit-two"></div><div className="shield-platform"></div><div className="hero-shield"><Icon name="shield" size={112}/><span className="shield-lock">⌑</span></div><div className="holo-chip chip-left">▰</div><div className="holo-chip chip-right">▥</div><div className="holo-chip chip-bottom">◇</div></div>
+        </section>
+        <section className="metric-grid" aria-label="Dashboard summary">
+          <article className="metric-card metric-cyan"><div className="metric-icon">▣</div><span>Total Analyses</span><strong>{history.length}</strong><small>Saved on this device</small><div className="metric-spark spark-cyan"></div></article>
+          <article className="metric-card metric-red"><div className="metric-icon">!</div><span>High Risk</span><strong>{highCount}</strong><small>From saved analyses</small><div className="metric-spark spark-red"></div></article>
+          <article className="metric-card metric-green"><div className="metric-icon">✓</div><span>Low Risk</span><strong>{lowCount}</strong><small>From saved analyses</small><div className="metric-spark spark-green"></div></article>
+          <article className="metric-card metric-violet"><div className="metric-icon">◎</div><span>Model</span><strong>AI / ML</strong><small>Random Forest demo</small><div className="metric-spark spark-violet"></div></article>
+        </section>
+        <section className="insight-grid" id="analytics">
+          <article className="glass-panel risk-overview"><div className="section-title"><div><p className="eyebrow">LIVE FROM THIS SESSION</p><h3>Fraud Risk Overview</h3></div><span className="live-pill">● Local data</span></div>
+            <div className="risk-content"><div className="donut-wrap"><div className="risk-donut"><div><strong>{history.length ? Math.round(history.reduce((sum,item)=>sum+Number(item.probability||0),0)/history.length*100) : 0}%</strong><span>Avg. score</span></div></div></div><div className="risk-legend"><p><i className="legend-low"></i> Low Risk <b>{lowCount}</b></p><p><i className="legend-medium"></i> Medium Risk <b>{mediumCount}</b></p><p><i className="legend-high"></i> High Risk <b>{highCount}</b></p></div></div><p className="panel-footnote">Based on saved analyses in this browser. No account-wide data is collected.</p>
+          </article>
+          <article className="glass-panel trend-panel"><div className="section-title"><div><p className="eyebrow">ACTIVITY SNAPSHOT</p><h3>Transaction Trend</h3></div><span className="trend-tag">Recent checks</span></div><div className="trend-chart"><div className="chart-ylabels"><span>100</span><span>75</span><span>50</span><span>25</span><span>0</span></div><div className="chart-plot"><div className="chart-gridlines"><i></i><i></i><i></i><i></i><i></i></div><svg viewBox="0 0 520 180" preserveAspectRatio="none" role="img" aria-label="Illustrative transaction activity trend"><defs><linearGradient id="trendFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#12baff" stopOpacity=".35"/><stop offset="1" stopColor="#12baff" stopOpacity="0"/></linearGradient><linearGradient id="trendStroke"><stop stopColor="#00d9ff"/><stop offset="1" stopColor="#a13cff"/></linearGradient></defs><path d="M0 143 C55 138 60 112 115 115 S185 80 230 88 S300 35 345 65 S405 92 450 48 S490 42 520 26 L520 180 L0 180Z" fill="url(#trendFill)"/><path d="M0 143 C55 138 60 112 115 115 S185 80 230 88 S300 35 345 65 S405 92 450 48 S490 42 520 26" fill="none" stroke="url(#trendStroke)" strokeWidth="3" vectorEffect="non-scaling-stroke"/><g fill="#07132b" stroke="#48d9ff" strokeWidth="2"><circle cx="0" cy="143" r="4"/><circle cx="115" cy="115" r="4"/><circle cx="230" cy="88" r="4"/><circle cx="345" cy="65" r="4"/><circle cx="450" cy="48" r="4"/><circle cx="520" cy="26" r="4"/></g></svg><div className="chart-xlabels"><span>Earlier</span><span>Recent</span><span>Latest</span></div></div></div><p className="panel-footnote">Decorative trend illustration — not connected to transaction telemetry.</p></article>
+        </section>
+        <section className="activity-grid" id="history">
+          <article className="glass-panel recent-panel"><div className="section-title"><div><p className="eyebrow">YOUR DEVICE HISTORY</p><h3>Recent Activity</h3></div><a href="#analyzer">New analysis →</a></div>
+            {history.length ? <div className="recent-list">{history.slice(0,4).map(item=><div className="recent-row" key={item.id}><span className={'activity-mark '+item.risk.toLowerCase()}>{item.risk.toLowerCase()==='high'?'!':'✓'}</span><div><strong>{item.risk} risk analysis</strong><small>{item.time}</small></div><b>₹{Number(item.amount).toLocaleString('en-IN')}</b></div>)}</div> : <div className="empty-activity"><span>◷</span><strong>No analyses yet</strong><p>Run your first transaction check to see activity here.</p><a href="#analyzer">Start an analysis</a></div>}
+          </article>
+          <article className="glass-panel indicators-panel"><div className="section-title"><div><p className="eyebrow">WHAT THE MODEL CHECKS</p><h3>Top Risk Indicators</h3></div></div><div className="indicator-grid"><div><span className="indicator-icon cyan">⌖</span><strong>Location</strong><small>Distance from home</small></div><div><span className="indicator-icon violet">▤</span><strong>Amount</strong><small>Transaction value</small></div><div><span className="indicator-icon amber">◷</span><strong>Frequency</strong><small>Recent transaction count</small></div><div><span className="indicator-icon green">◎</span><strong>International</strong><small>Cross-border activity</small></div></div></article>
+        </section>
+        <section className="analyzer-section" id="analyzer">
+          <div className="section-intro"><p className="eyebrow">INTERACTIVE MODEL WORKSPACE</p><h2>Run a Fraud Analysis</h2><p>Enter sample transaction details to receive a risk estimate from the demo model.</p></div>
+          <section className="panel input-panel">
+            <div className="panel-heading"><div><p className="eyebrow"><Icon name="shield" size={13}/> TRANSACTION INPUT</p><h3>Analyse a transaction</h3></div><span className="step">01 / INPUT</span></div>
+            <div className="sample-toolbar"><span className="sample-label">QUICK TEST SCENARIOS</span><div className="sample-buttons">{samples.map(sample=><button type="button" className="sample-button" key={sample.label} onClick={()=>loadSample(sample)}><Icon name={sample.icon} size={14}/>{sample.label}</button>)}</div></div>
+            <form onSubmit={submit}>
+              <label>Transaction amount (₹)<input type="number" min="0" value={form.amount} onChange={e=>update('amount',Number(e.target.value))}/></label>
+              <label>Transaction hour (0–23)<input type="number" min="0" max="23" value={form.hour} onChange={e=>update('hour',Number(e.target.value))}/></label>
+              <label>Distance from home (km)<input type="number" min="0" value={form.distance_from_home_km} onChange={e=>update('distance_from_home_km',Number(e.target.value))}/></label>
+              <label>Transactions in last 24 hours<input type="number" min="0" value={form.transactions_last_24h} onChange={e=>update('transactions_last_24h',Number(e.target.value))}/></label>
+              <label className="wide">Merchant risk score <strong>{Number(form.merchant_risk).toFixed(2)}</strong><input type="range" min="0" max="1" step="0.05" value={form.merchant_risk} onChange={e=>update('merchant_risk',Number(e.target.value))}/></label>
+              <label className="toggle"><input type="checkbox" checked={form.is_international} onChange={e=>update('is_international',e.target.checked)}/> International transaction</label>
+              <div className="form-actions"><button disabled={loading || apiStatus==='offline'} className={loading?'analyzing':''}>{loading&&<span className="spinner" aria-hidden="true"/>}{loading?'Analysing transaction…':<><Icon name="search" size={16}/> Run fraud analysis</>}</button><button type="button" className="reset-form" onClick={resetForm} disabled={loading}><Icon name="rotate" size={15}/> Reset inputs</button></div>
+            </form>
+            {error&&<p className="error" role="alert">{error}</p>}
+          </section>
+          {result&&<section className="result panel result-enter" aria-live="polite"><div className="panel-heading"><div><p className="eyebrow"><Icon name="activity" size={13}/> MODEL OUTPUT</p><h3>Risk assessment</h3></div><span className={'risk '+result.risk_level.toLowerCase()}>{result.risk_level} RISK</span></div><div className="score">{displayScore.toFixed(1)}<small>%</small></div><div className="meter"><span className={result.risk_level.toLowerCase()} style={{width:displayScore+'%'}}/></div><p className="muted">Estimated fraud probability · synthetic demo model</p><h4>Recommended next step</h4><p>{result.recommended_action}</p><h4>Signals detected</h4><ul>{result.signals.map((signal,index)=><li className="signal-enter" style={{animationDelay:(index*90)+'ms'}} key={signal}>{signal}</li>)}</ul></section>}
+          <section className="analytics panel">
+            <div className="panel-heading"><div><p className="eyebrow"><Icon name="chart" size={13}/> SAVED OVERVIEW</p><h3>Analysis History & Reports</h3></div><div className="history-actions"><button type="button" className="export-history" onClick={exportHistory} disabled={!history.length}>↓ Export CSV</button><button type="button" className="export-pdf" onClick={exportPdfReport} disabled={!history.length}>▤ Save PDF</button><button type="button" className="clear-history" onClick={()=>setHistory([])} disabled={!history.length}>Clear history</button></div></div>
+            <div className="stat-grid"><div className="stat-card"><span>Analysed</span><strong>{history.length}</strong></div><div className="stat-card"><span>High risk</span><strong className="stat-high">{highCount}</strong></div><div className="stat-card"><span>Medium risk</span><strong className="stat-medium">{mediumCount}</strong></div><div className="stat-card"><span>Low risk</span><strong className="stat-low">{lowCount}</strong></div></div>
+            <div className="distribution"><div className="distribution-label"><span>Risk distribution</span><span>{history.length} checks</span></div><div className="distribution-bar"><i className="bar-high" style={{width:(highCount/total*100)+'%'}}/><i className="bar-medium" style={{width:(mediumCount/total*100)+'%'}}/><i className="bar-low" style={{width:(lowCount/total*100)+'%'}}/></div><div className="legend"><span><i className="dot-high"/> High</span><span><i className="dot-medium"/> Medium</span><span><i className="dot-low"/> Low</span></div></div>
+            <h4><Icon name="clock" size={15}/> Recent transactions</h4><div className="history-list">{history.map(item=><div className="history-row" key={item.id}><div><strong>₹{Number(item.amount).toLocaleString('en-IN')}</strong><small>{item.time}</small></div><span className={'risk '+item.risk.toLowerCase()}>{item.risk}</span><strong className="history-score">{(item.probability*100).toFixed(1)}%</strong></div>)}</div>
+            <p className="muted small-note">History is stored only in this browser. This is a synthetic educational demo, not a production banking system. Do not enter real customer or payment information.</p>
+          </section>
+        </section>
+        <section className="closing-banner"><div className="closing-emblem"><Icon name="shield" size={56}/></div><div><h3>Build a Safer Digital World</h3><p>Prevent fraud. Protect your users. Grow with confidence.</p></div><a href="#analyzer">Explore the demo <span>→</span></a></section>
+        <footer className="dashboard-footer"><a className="footer-brand" href="#home"><Icon name="shield" size={27}/> WFraudN<span>@X</span></a><div><a href="#analyzer">About the demo</a><a href="#history">History</a><a href="mailto:smabduljabbar.co@gmail.com">Contact</a></div><small>Portfolio project · Educational use only</small></footer>
       </div>
-      <form onSubmit={submit}>
-        <label>Transaction amount (₹)<input type="number" min="0" value={form.amount} onChange={e=>update('amount', Number(e.target.value))}/></label>
-        <label>Transaction hour (0–23)<input type="number" min="0" max="23" value={form.hour} onChange={e=>update('hour', Number(e.target.value))}/></label>
-        <label>Distance from home (km)<input type="number" min="0" value={form.distance_from_home_km} onChange={e=>update('distance_from_home_km', Number(e.target.value))}/></label>
-        <label>Transactions in last 24 hours<input type="number" min="0" value={form.transactions_last_24h} onChange={e=>update('transactions_last_24h', Number(e.target.value))}/></label>
-        <label className="wide">Merchant risk score <strong>{Number(form.merchant_risk).toFixed(2)}</strong><input type="range" min="0" max="1" step="0.05" value={form.merchant_risk} onChange={e=>update('merchant_risk', Number(e.target.value))}/></label>
-        <label className="toggle"><input type="checkbox" checked={form.is_international} onChange={e=>update('is_international', e.target.checked)}/> International transaction</label>
-        <div className="form-actions"><button disabled={loading || apiStatus === 'offline'} className={loading ? 'analyzing' : ''}>{loading && <span className="spinner" aria-hidden="true"/>}{loading ? 'Analysing transaction…' : <><Icon name="search" size={16}/> Run fraud analysis</>}</button><button type="button" className="reset-form" onClick={resetForm} disabled={loading}><Icon name="rotate" size={15}/> Reset inputs</button></div>
-      </form>
-      {error && <p className="error" role="alert">{error}</p>}
-    </section>
-    {result && <section className="result panel result-enter" aria-live="polite">
-      <div className="panel-heading"><div><p className="eyebrow"><Icon name="activity" size={13}/> MODEL OUTPUT</p><h3>Risk assessment</h3></div><span className={'risk ' + result.risk_level.toLowerCase()}>{result.risk_level} RISK</span></div>
-      <div className="score">{displayScore.toFixed(1)}<small>%</small></div>
-      <div className="meter"><span className={result.risk_level.toLowerCase()} style={{width: displayScore + '%'}}/></div>
-      <p className="muted">Estimated fraud probability · synthetic demo model</p>
-      <h4>Recommended next step</h4><p>{result.recommended_action}</p><h4>Signals detected</h4>
-      <ul>{result.signals.map((signal,index)=><li className="signal-enter" style={{animationDelay: (index*90) + 'ms'}} key={signal}>{signal}</li>)}</ul>
-    </section>}
-
-    {history.length > 0 && <section className="analytics panel result-enter">
-      <div className="panel-heading"><div><p className="eyebrow"><Icon name="chart" size={13}/> SAVED OVERVIEW</p><h3>Analysis activity</h3></div><div className="history-actions"><button type="button" className="export-history" onClick={exportHistory}>↓ Export CSV</button><button type="button" className="export-pdf" onClick={exportPdfReport}>▤ Save PDF</button><button type="button" className="clear-history" onClick={() => setHistory([])}>Clear history</button></div></div>
-      <div className="stat-grid">
-        <div className="stat-card"><span>Analysed</span><strong>{history.length}</strong></div>
-        <div className="stat-card"><span>High risk</span><strong className="stat-high">{highCount}</strong></div>
-        <div className="stat-card"><span>Medium risk</span><strong className="stat-medium">{mediumCount}</strong></div>
-        <div className="stat-card"><span>Low risk</span><strong className="stat-low">{lowCount}</strong></div>
-      </div>
-      <div className="distribution"><div className="distribution-label"><span>Risk distribution</span><span>{history.length} checks</span></div>
-        <div className="distribution-bar"><i className="bar-high" style={{width: (highCount/total*100)+'%'}}/><i className="bar-medium" style={{width: (mediumCount/total*100)+'%'}}/><i className="bar-low" style={{width: (lowCount/total*100)+'%'}}/></div>
-        <div className="legend"><span><i className="dot-high"/> High</span><span><i className="dot-medium"/> Medium</span><span><i className="dot-low"/> Low</span></div>
-      </div>
-      <h4><Icon name="clock" size={15}/> Recent transactions</h4>
-      <div className="history-list">{history.map(item => <div className="history-row" key={item.id}>
-        <div><strong>₹{Number(item.amount).toLocaleString('en-IN')}</strong><small>{item.time}</small></div>
-        <span className={'risk '+item.risk.toLowerCase()}>{item.risk}</span>
-        <strong className="history-score">{(item.probability*100).toFixed(1)}%</strong>
-      </div>)}</div>
-      <p className="muted small-note">Saved in this browser on this device, including after refresh. Clearing browser data or using another browser/device will not carry this history over. Demo data only — do not enter real customer or payment information.</p>
-    </section>}
-    <footer>PORTFOLIO PROJECT · EDUCATIONAL USE ONLY · NOT FOR REAL FINANCIAL DECISIONS</footer>
+    </div>
   </main>;
+}
 }
