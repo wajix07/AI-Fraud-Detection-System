@@ -207,6 +207,18 @@ A production-grade system would require appropriately licensed and anonymized da
 - Add CI checks for backend tests and frontend builds.
 - Add screenshot-based product documentation.
 
+
+## Install FraudShield AI
+
+FraudShield AI is configured as a Progressive Web App (PWA), so it can be installed from the deployed website without publishing through an app store or paying a store registration fee.
+
+1. Open the live dashboard in a supported browser: https://fraudshield-ai-dashboard.onrender.com
+2. On Android, use Chrome and choose **Install app** when the browser or dashboard offers it.
+3. On Windows or desktop Chrome/Edge, use the install icon in the browser address bar or the dashboard's **Install App** control.
+4. On iPhone/iPad, open the dashboard in **Safari**, tap **Share**, then choose **Add to Home Screen**.
+
+The PWA caches the app shell to make the interface easier to reopen. Live transaction analysis still requires an internet connection because predictions are processed by the hosted FastAPI backend. The browser's install prompt is not available in every browser; iOS uses the Safari **Add to Home Screen** flow.
+
 ## Repository
 
 [GitHub repository](https://github.com/wajix07/AI-Fraud-Detection-System) · [GitHub profile](https://github.com/wajix07)
