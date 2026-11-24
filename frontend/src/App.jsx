@@ -2,23 +2,10 @@ import { useEffect, useState } from 'react';
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000').replace(/\/$/, '');
 const initial = { amount: 850, hour: 2, distance_from_home_km: 420, is_international: true, transactions_last_24h: 8, merchant_risk: 0.8 };
 const samples = [
-  { label: 'Low-risk example', icon: 'shield', values: { amount: 450, hour: 14, distance_from_home_km: 3, is_international: false, transactions_last_24h: 1, merchant_risk: 0.1 } },
-  { label: 'Unusual activity', icon: 'activity', values: { amount: 18500, hour: 1, distance_from_home_km: 620, is_international: true, transactions_last_24h: 11, merchant_risk: 0.9 } },
-  { label: 'Review example', icon: 'search', values: { amount: 5200, hour: 20, distance_from_home_km: 85, is_international: false, transactions_last_24h: 4, merchant_risk: 0.5 } }
+  { label: 'Low-risk example', values: { amount: 450, hour: 14, distance_from_home_km: 3, is_international: false, transactions_last_24h: 1, merchant_risk: 0.1 } },
+  { label: 'Unusual activity', values: { amount: 18500, hour: 1, distance_from_home_km: 620, is_international: true, transactions_last_24h: 11, merchant_risk: 0.9 } },
+  { label: 'Review example', values: { amount: 5200, hour: 20, distance_from_home_km: 85, is_international: false, transactions_last_24h: 4, merchant_risk: 0.5 } }
 ];
-
-function Icon({ name, size = 17 }) {
-  const paths = {
-    shield: <><path d="M12 3 20 6v5c0 5-3.4 8.5-8 10-4.6-1.5-8-5-8-10V6l8-3Z"/><path d="m8.5 12 2.2 2.2 4.8-4.8"/></>,
-    activity: <><path d="M3 12h4l3-8 4 16 3-8h4"/></>,
-    search: <><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></>,
-    rotate: <><path d="M20 7v5h-5"/><path d="M4 17v-5h5"/><path d="M5.6 9A7 7 0 0 1 18 6l2 6M4 12l2 6a7 7 0 0 0 12.4-3"/></>,
-    chart: <><path d="M4 19V5M4 19h17"/><path d="m7 15 4-4 3 2 5-7"/></>,
-    clock: <><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></>,
-    file: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></>
-  };
-  return <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{paths[name] || paths.shield}</svg>;
-}
 
 export default function App() {
   const [form, setForm] = useState(initial);
@@ -196,17 +183,17 @@ export default function App() {
 
   return <main className="shell">
     <div className="ambient ambient-one" aria-hidden="true" /><div className="ambient ambient-two" aria-hidden="true" />
-    <header className="topbar"><div className="brand-lockup"><div className="brand-mark">W</div><div><p className="eyebrow">AI-POWERED FRAUD DETECTION</p><h1>WFraudN<span>@X</span></h1></div></div>{!isInstalled && (installPrompt || isIOS) && <button type="button" className="install-app" onClick={installApp}>Install App ↓</button>}</header>
+    <header className="topbar"><div className="brand-lockup"><div className="brand-mark">W</div><div><p className="eyebrow">AI-POWERED FRAUD DETECTION</p><h1>WFraudN<span>@X</span></h1></div></div>{!isInstalled && (installPrompt || isIOS) && <button type="button" className="install-app" onClick={installApp}>Install App</button>}</header>
     {showInstallHelp && <div className="install-help" role="status">To install on iPhone: open this page in Safari, tap the Share icon, then choose <strong>Add to Home Screen</strong>.</div>}
     <section className="intro reveal">
       <div><p className="eyebrow">RISK ANALYSIS WORKSPACE</p><h2>Know the risk.<br/><em>Before it escalates.</em></h2><p className="muted">Submit transaction details to estimate fraud risk using a machine-learning model.</p></div>
       <div className={'status status-' + apiStatus}><i/> API {apiStatus === 'checking' ? 'CHECKING' : apiStatus.toUpperCase()} · DEMO</div>
     </section>
     <section className="panel input-panel reveal delay-one">
-      <div className="panel-heading"><div><p className="eyebrow"><Icon name="shield" size={13}/> TRANSACTION INPUT</p><h3>Analyse a transaction</h3></div><span className="step">01 / INPUT</span></div>
+      <div className="panel-heading"><div><p className="eyebrow">TRANSACTION INPUT</p><h3>Analyse a transaction</h3></div><span className="step">01 / INPUT</span></div>
       <div className="sample-toolbar">
         <span className="sample-label">QUICK TEST SCENARIOS</span>
-        <div className="sample-buttons">{samples.map(sample => <button type="button" className="sample-button" key={sample.label} onClick={() => loadSample(sample)}><Icon name={sample.icon} size={14}/>{sample.label}</button>)}</div>
+        <div className="sample-buttons">{samples.map(sample => <button type="button" className="sample-button" key={sample.label} onClick={() => loadSample(sample)}>{sample.label}</button>)}</div>
       </div>
       <form onSubmit={submit}>
         <label>Transaction amount (₹)<input type="number" min="0" value={form.amount} onChange={e=>update('amount', Number(e.target.value))}/></label>
@@ -215,12 +202,12 @@ export default function App() {
         <label>Transactions in last 24 hours<input type="number" min="0" value={form.transactions_last_24h} onChange={e=>update('transactions_last_24h', Number(e.target.value))}/></label>
         <label className="wide">Merchant risk score <strong>{Number(form.merchant_risk).toFixed(2)}</strong><input type="range" min="0" max="1" step="0.05" value={form.merchant_risk} onChange={e=>update('merchant_risk', Number(e.target.value))}/></label>
         <label className="toggle"><input type="checkbox" checked={form.is_international} onChange={e=>update('is_international', e.target.checked)}/> International transaction</label>
-        <div className="form-actions"><button disabled={loading || apiStatus === 'offline'} className={loading ? 'analyzing' : ''}>{loading && <span className="spinner" aria-hidden="true"/>}{loading ? 'Analysing transaction…' : <><Icon name="search" size={16}/> Run fraud analysis</>}</button><button type="button" className="reset-form" onClick={resetForm} disabled={loading}><Icon name="rotate" size={15}/> Reset inputs</button></div>
+        <div className="form-actions"><button disabled={loading || apiStatus === 'offline'} className={loading ? 'analyzing' : ''}>{loading && <span className="spinner" aria-hidden="true"/>}{loading ? 'Analysing transaction…' : <>Run fraud analysis</>}</button><button type="button" className="reset-form" onClick={resetForm} disabled={loading}>Reset inputs</button></div>
       </form>
       {error && <p className="error" role="alert">{error}</p>}
     </section>
     {result && <section className="result panel result-enter" aria-live="polite">
-      <div className="panel-heading"><div><p className="eyebrow"><Icon name="activity" size={13}/> MODEL OUTPUT</p><h3>Risk assessment</h3></div><span className={'risk ' + result.risk_level.toLowerCase()}>{result.risk_level} RISK</span></div>
+      <div className="panel-heading"><div><p className="eyebrow">MODEL OUTPUT</p><h3>Risk assessment</h3></div><span className={'risk ' + result.risk_level.toLowerCase()}>{result.risk_level} RISK</span></div>
       <div className="score">{displayScore.toFixed(1)}<small>%</small></div>
       <div className="meter"><span className={result.risk_level.toLowerCase()} style={{width: displayScore + '%'}}/></div>
       <p className="muted">Estimated fraud probability · synthetic demo model</p>
@@ -229,7 +216,7 @@ export default function App() {
     </section>}
 
     {history.length > 0 && <section className="analytics panel result-enter">
-      <div className="panel-heading"><div><p className="eyebrow"><Icon name="chart" size={13}/> SAVED OVERVIEW</p><h3>Analysis activity</h3></div><div className="history-actions"><button type="button" className="export-history" onClick={exportHistory}>↓ Export CSV</button><button type="button" className="export-pdf" onClick={exportPdfReport}>▤ Save PDF</button><button type="button" className="clear-history" onClick={() => setHistory([])}>Clear history</button></div></div>
+      <div className="panel-heading"><div><p className="eyebrow">SAVED OVERVIEW</p><h3>Analysis activity</h3></div><div className="history-actions"><button type="button" className="export-history" onClick={exportHistory}>Export CSV</button><button type="button" className="export-pdf" onClick={exportPdfReport}>Save PDF</button><button type="button" className="clear-history" onClick={() => setHistory([])}>Clear history</button></div></div>
       <div className="stat-grid">
         <div className="stat-card"><span>Analysed</span><strong>{history.length}</strong></div>
         <div className="stat-card"><span>High risk</span><strong className="stat-high">{highCount}</strong></div>
@@ -240,7 +227,7 @@ export default function App() {
         <div className="distribution-bar"><i className="bar-high" style={{width: (highCount/total*100)+'%'}}/><i className="bar-medium" style={{width: (mediumCount/total*100)+'%'}}/><i className="bar-low" style={{width: (lowCount/total*100)+'%'}}/></div>
         <div className="legend"><span><i className="dot-high"/> High</span><span><i className="dot-medium"/> Medium</span><span><i className="dot-low"/> Low</span></div>
       </div>
-      <h4><Icon name="clock" size={15}/> Recent transactions</h4>
+      <h4>Recent transactions</h4>
       <div className="history-list">{history.map(item => <div className="history-row" key={item.id}>
         <div><strong>₹{Number(item.amount).toLocaleString('en-IN')}</strong><small>{item.time}</small></div>
         <span className={'risk '+item.risk.toLowerCase()}>{item.risk}</span>
