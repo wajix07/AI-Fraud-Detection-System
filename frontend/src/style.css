@@ -36,3 +36,11 @@ h4{margin:22px 0 8px}.risk{font:11px 'DM Mono';padding:8px 10px;border-radius:20
 .install-help{margin:16px 0 0;padding:14px 16px;border:1px solid #496052;border-radius:10px;background:#14212b;color:#c7d4dc;font-size:13px;line-height:1.6}
 .install-help strong{color:#b9f36b}
 @media(max-width:420px){.brand-lockup{gap:10px}.install-app{padding:9px 10px;font-size:11px}.topbar .eyebrow{font-size:9px;letter-spacing:1px}}
+
+
+/* Keep Quick Test Scenario controls text-only, even if an icon is added accidentally. */
+.sample-buttons{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.sample-button{display:inline-flex;align-items:center;justify-content:center;gap:0;padding:10px 14px;background:#172630;color:#dce8ee;border:1px solid #344956;border-radius:9px;font-size:12px;font-weight:700;box-shadow:none}
+.sample-button:hover:not(:disabled){background:#203641;border-color:#b9f36b;box-shadow:none;transform:translateY(-1px)}
+.sample-button::before,.sample-button::after{content:none!important;display:none!important}
+.sample-button svg,.sample-button img,.sample-button i,.sample-button .icon{display:none!important}
